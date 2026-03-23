@@ -1,0 +1,847 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Polymarket AI Agent — Prediction Market Intelligence</title>
+  <meta name="description" content="AI-powered Polymarket prediction analysis. Real-time market odds, sentiment scoring, edge detection. Free, open source.">
+  <meta property="og:title" content="Polymarket AI Agent — Prediction Intelligence">
+  <meta property="og:description" content="AI scans Polymarket for mispriced predictions. Sentiment analysis, probability scoring, edge detection.">
+  <meta property="og:image" content="https://visioneth.github.io/polymarket-agent/og-image.svg">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Polymarket AI Agent">
+  <meta name="twitter:description" content="AI finds mispriced predictions on Polymarket. Real-time analysis.">
+  <meta name="twitter:image" content="https://visioneth.github.io/polymarket-agent/og-image.svg">
+
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700;800;900&family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg: #020208;
+      --bg2: #06061a;
+      --bg3: #0a0a24;
+      --border: #12123a;
+      --text: #e0e0f5;
+      --dim: #5555aa;
+      --green: #00ff88;
+      --red: #ff2255;
+      --blue: #3366ff;
+      --purple: #7733ff;
+      --yellow: #ffcc00;
+      --cyan: #00ccff;
+      --orange: #ff8800;
+      --pink: #ff33aa;
+      --poly: #3366ff;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Inter', sans-serif;
+      overflow-x: hidden;
+      min-height: 100vh;
+    }
+
+    /* AI Brain neural network bg */
+    .neural-bg {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      overflow: hidden;
+    }
+
+    .neuron {
+      position: absolute;
+      width: 3px;
+      height: 3px;
+      border-radius: 50%;
+      background: var(--purple);
+      opacity: 0;
+      animation: neuronPulse 4s ease infinite;
+    }
+
+    @keyframes neuronPulse {
+      0% { opacity: 0; transform: scale(0); }
+      30% { opacity: 0.6; transform: scale(1.5); box-shadow: 0 0 15px var(--purple); }
+      60% { opacity: 0.2; transform: scale(1); }
+      100% { opacity: 0; transform: scale(0); }
+    }
+
+    .synapse {
+      position: absolute;
+      height: 1px;
+      opacity: 0;
+      animation: synapseFire 5s ease infinite;
+    }
+
+    @keyframes synapseFire {
+      0% { opacity: 0; }
+      20% { opacity: 0.3; }
+      40% { opacity: 0; }
+      100% { opacity: 0; }
+    }
+
+    .app {
+      position: relative;
+      z-index: 1;
+      max-width: 1440px;
+      margin: 0 auto;
+      padding: 16px;
+    }
+
+    /* Header */
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px 0;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 20px;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .logo-icon {
+      width: 46px;
+      height: 46px;
+      background: linear-gradient(135deg, var(--purple), var(--poly));
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      box-shadow: 0 0 25px rgba(119,51,255,0.4);
+      animation: brainPulse 3s ease infinite;
+    }
+
+    @keyframes brainPulse {
+      0%, 100% { box-shadow: 0 0 25px rgba(119,51,255,0.3); transform: scale(1); }
+      50% { box-shadow: 0 0 40px rgba(119,51,255,0.5); transform: scale(1.03); }
+    }
+
+    .logo-text {
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 900;
+      font-size: 22px;
+    }
+
+    .logo-text .poly { color: var(--poly); }
+    .logo-text .agent { color: var(--purple); }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .ai-badge {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: linear-gradient(135deg, rgba(119,51,255,0.1), rgba(51,102,255,0.1));
+      border: 1px solid rgba(119,51,255,0.3);
+      padding: 8px 18px;
+      border-radius: 100px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      font-weight: 800;
+      color: var(--purple);
+    }
+
+    .ai-dot {
+      width: 8px;
+      height: 8px;
+      background: var(--purple);
+      border-radius: 50%;
+      box-shadow: 0 0 12px var(--purple);
+      animation: aiPulse 1.5s ease infinite;
+    }
+
+    @keyframes aiPulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.4; }
+    }
+
+    .gh-link {
+      color: var(--dim);
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: color 0.2s;
+    }
+    .gh-link:hover { color: var(--text); }
+
+    .glow-line {
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--purple), var(--poly), var(--cyan), transparent);
+      opacity: 0.4;
+      margin-bottom: 20px;
+    }
+
+    /* Overview */
+    .overview-bar {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    .ov-card {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 16px 20px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .ov-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+    }
+
+    .ov-card:nth-child(1)::before { background: var(--purple); }
+    .ov-card:nth-child(2)::before { background: var(--green); }
+    .ov-card:nth-child(3)::before { background: var(--yellow); }
+    .ov-card:nth-child(4)::before { background: var(--cyan); }
+    .ov-card:nth-child(5)::before { background: var(--pink); }
+
+    .ov-label {
+      font-size: 10px;
+      font-weight: 700;
+      color: var(--dim);
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      margin-bottom: 8px;
+    }
+
+    .ov-val {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 28px;
+      font-weight: 900;
+    }
+
+    .ov-sub {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      color: var(--dim);
+      margin-top: 4px;
+    }
+
+    /* Main grid */
+    .main-grid {
+      display: grid;
+      grid-template-columns: 1fr 400px;
+      gap: 16px;
+    }
+
+    .left-panel { display: flex; flex-direction: column; gap: 16px; }
+
+    /* Market cards */
+    .markets-panel {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      overflow: hidden;
+    }
+
+    .panel-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px 22px;
+      border-bottom: 1px solid var(--border);
+      background: rgba(255,255,255,0.01);
+    }
+
+    .panel-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 14px;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .panel-sub {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      color: var(--dim);
+    }
+
+    .markets-body {
+      max-height: 640px;
+      overflow-y: auto;
+      scrollbar-width: thin;
+      scrollbar-color: var(--border) transparent;
+    }
+
+    .markets-body::-webkit-scrollbar { width: 4px; }
+    .markets-body::-webkit-scrollbar-track { background: transparent; }
+    .markets-body::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+
+    /* Market card */
+    .market-card {
+      padding: 18px 22px;
+      border-bottom: 1px solid rgba(255,255,255,0.02);
+      animation: cardIn 0.5s ease;
+      transition: background 0.2s;
+    }
+
+    .market-card:hover { background: rgba(255,255,255,0.015); }
+
+    .market-card.edge { border-left: 3px solid var(--green); background: rgba(0,255,136,0.02); }
+    .market-card.hot { border-left: 3px solid var(--yellow); }
+
+    @keyframes cardIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .market-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 12px;
+    }
+
+    .market-question {
+      font-weight: 700;
+      font-size: 14px;
+      line-height: 1.4;
+      max-width: 70%;
+    }
+
+    .market-category {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      font-weight: 700;
+      padding: 3px 10px;
+      border-radius: 6px;
+      text-transform: uppercase;
+    }
+
+    .cat-politics { background: rgba(255,51,170,0.1); color: var(--pink); border: 1px solid rgba(255,51,170,0.2); }
+    .cat-crypto { background: rgba(0,204,255,0.1); color: var(--cyan); border: 1px solid rgba(0,204,255,0.2); }
+    .cat-sports { background: rgba(0,255,136,0.1); color: var(--green); border: 1px solid rgba(0,255,136,0.2); }
+    .cat-culture { background: rgba(255,136,0,0.1); color: var(--orange); border: 1px solid rgba(255,136,0,0.2); }
+    .cat-tech { background: rgba(119,51,255,0.1); color: var(--purple); border: 1px solid rgba(119,51,255,0.2); }
+    .cat-finance { background: rgba(255,204,0,0.1); color: var(--yellow); border: 1px solid rgba(255,204,0,0.2); }
+
+    .market-bottom {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 12px;
+    }
+
+    .market-stat {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .market-stat-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 9px;
+      font-weight: 700;
+      color: var(--dim);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .market-stat-val {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 16px;
+      font-weight: 800;
+    }
+
+    /* Probability bar */
+    .prob-bar {
+      height: 8px;
+      background: rgba(255,255,255,0.05);
+      border-radius: 4px;
+      overflow: hidden;
+      margin-top: 10px;
+    }
+
+    .prob-fill {
+      height: 100%;
+      border-radius: 4px;
+      transition: width 0.6s ease;
+    }
+
+    .prob-labels {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 4px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      color: var(--dim);
+    }
+
+    /* Side panel */
+    .side-panel { display: flex; flex-direction: column; gap: 16px; }
+
+    .side-card {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      overflow: hidden;
+    }
+
+    /* AI Analysis card */
+    .ai-analysis {
+      padding: 18px 22px;
+    }
+
+    .ai-thinking {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      line-height: 1.8;
+      color: var(--dim);
+    }
+
+    .ai-thinking .highlight { color: var(--purple); font-weight: 700; }
+    .ai-thinking .green { color: var(--green); font-weight: 700; }
+    .ai-thinking .red { color: var(--red); font-weight: 700; }
+    .ai-thinking .yellow { color: var(--yellow); font-weight: 700; }
+
+    /* Edge detector */
+    .edge-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 22px;
+      border-bottom: 1px solid rgba(255,255,255,0.02);
+    }
+
+    .edge-market {
+      font-size: 12px;
+      font-weight: 600;
+      max-width: 60%;
+    }
+
+    .edge-val {
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 800;
+      font-size: 14px;
+      color: var(--green);
+    }
+
+    /* Sentiment gauge */
+    .sentiment-body {
+      padding: 18px 22px;
+    }
+
+    .gauge {
+      width: 100%;
+      height: 12px;
+      background: linear-gradient(90deg, var(--red), var(--yellow), var(--green));
+      border-radius: 6px;
+      position: relative;
+      margin: 16px 0 8px;
+    }
+
+    .gauge-pointer {
+      position: absolute;
+      top: -4px;
+      width: 4px;
+      height: 20px;
+      background: white;
+      border-radius: 2px;
+      box-shadow: 0 0 8px rgba(255,255,255,0.5);
+      transition: left 0.5s ease;
+    }
+
+    .gauge-labels {
+      display: flex;
+      justify-content: space-between;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+    }
+
+    .gauge-labels .bearish { color: var(--red); }
+    .gauge-labels .neutral { color: var(--yellow); }
+    .gauge-labels .bullish { color: var(--green); }
+
+    /* Footer */
+    .footer {
+      text-align: center;
+      padding: 28px;
+      color: var(--dim);
+      font-size: 13px;
+      margin-top: 24px;
+    }
+    .footer a { color: var(--purple); text-decoration: none; }
+
+    @media (max-width: 1100px) {
+      .main-grid { grid-template-columns: 1fr; }
+      .overview-bar { grid-template-columns: repeat(3, 1fr); }
+    }
+    @media (max-width: 600px) {
+      .overview-bar { grid-template-columns: repeat(2, 1fr); }
+      .market-bottom { grid-template-columns: 1fr 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="neural-bg" id="neural-bg"></div>
+
+  <div class="app">
+    <header class="header">
+      <div class="logo">
+        <div class="logo-icon">AI</div>
+        <div class="logo-text">
+          <span class="poly">poly</span><span class="agent">agent</span>
+        </div>
+      </div>
+      <div class="header-right">
+        <div class="ai-badge">
+          <div class="ai-dot"></div>
+          AI SCANNING MARKETS
+        </div>
+        <a href="https://github.com/visioneth/polymarket-agent" class="gh-link">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+          GitHub
+        </a>
+      </div>
+    </header>
+
+    <div class="glow-line"></div>
+
+    <!-- Overview -->
+    <div class="overview-bar">
+      <div class="ov-card">
+        <div class="ov-label">Markets Tracked</div>
+        <div class="ov-val" style="color:var(--purple)" id="markets-count">0</div>
+        <div class="ov-sub">Active prediction markets</div>
+      </div>
+      <div class="ov-card">
+        <div class="ov-label">Edge Detected</div>
+        <div class="ov-val" style="color:var(--green)" id="edge-count">0</div>
+        <div class="ov-sub">Mispriced markets</div>
+      </div>
+      <div class="ov-card">
+        <div class="ov-label">Avg Confidence</div>
+        <div class="ov-val" style="color:var(--yellow)" id="avg-conf">0%</div>
+        <div class="ov-sub">AI model confidence</div>
+      </div>
+      <div class="ov-card">
+        <div class="ov-label">Total Volume</div>
+        <div class="ov-val" style="color:var(--cyan)" id="total-vol">$0</div>
+        <div class="ov-sub">Tracked markets</div>
+      </div>
+      <div class="ov-card">
+        <div class="ov-label">Sentiment</div>
+        <div class="ov-val" style="color:var(--pink)" id="sentiment">--</div>
+        <div class="ov-sub" id="sent-sub">Market mood</div>
+      </div>
+    </div>
+
+    <div class="main-grid">
+      <div class="left-panel">
+        <div class="markets-panel">
+          <div class="panel-header">
+            <div class="panel-title">PREDICTION MARKETS</div>
+            <div class="panel-sub" id="market-sub">AI-analyzed</div>
+          </div>
+          <div class="markets-body" id="markets-feed"></div>
+        </div>
+      </div>
+
+      <div class="side-panel">
+        <!-- AI Analysis -->
+        <div class="side-card">
+          <div class="panel-header">
+            <div class="panel-title" style="color:var(--purple)">AI ANALYSIS</div>
+            <div class="panel-sub">Real-time reasoning</div>
+          </div>
+          <div class="ai-analysis" id="ai-output">
+            <div class="ai-thinking">Initializing neural network...</div>
+          </div>
+        </div>
+
+        <!-- Edge detector -->
+        <div class="side-card">
+          <div class="panel-header">
+            <div class="panel-title" style="color:var(--green)">EDGE DETECTOR</div>
+            <div class="panel-sub">Mispriced markets</div>
+          </div>
+          <div id="edge-list"></div>
+        </div>
+
+        <!-- Sentiment -->
+        <div class="side-card">
+          <div class="panel-header">
+            <div class="panel-title">MARKET SENTIMENT</div>
+          </div>
+          <div class="sentiment-body">
+            <div class="gauge">
+              <div class="gauge-pointer" id="gauge-ptr" style="left: 50%;"></div>
+            </div>
+            <div class="gauge-labels">
+              <span class="bearish">BEARISH</span>
+              <span class="neutral">NEUTRAL</span>
+              <span class="bullish">BULLISH</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <footer class="footer">
+      Built by <a href="https://github.com/visioneth">visioneth</a> &middot;
+      <a href="https://github.com/visioneth/polymarket-agent">GitHub</a> &middot;
+      Not financial advice. Prediction markets carry risk.
+    </footer>
+  </div>
+
+  <script>
+    // ===== NEURAL NETWORK BG =====
+    const neuralBg = document.getElementById('neural-bg');
+    for (let i = 0; i < 40; i++) {
+      const n = document.createElement('div');
+      n.className = 'neuron';
+      n.style.left = Math.random() * 100 + '%';
+      n.style.top = Math.random() * 100 + '%';
+      n.style.animationDuration = (3 + Math.random() * 5) + 's';
+      n.style.animationDelay = (Math.random() * 6) + 's';
+      if (Math.random() > 0.5) n.style.background = '#3366ff';
+      if (Math.random() > 0.8) n.style.background = '#00ccff';
+      neuralBg.appendChild(n);
+    }
+
+    for (let i = 0; i < 15; i++) {
+      const s = document.createElement('div');
+      s.className = 'synapse';
+      s.style.top = Math.random() * 100 + '%';
+      s.style.left = Math.random() * 60 + '%';
+      s.style.width = (60 + Math.random() * 200) + 'px';
+      s.style.background = `linear-gradient(90deg, transparent, ${Math.random() > 0.5 ? '#7733ff' : '#3366ff'}, transparent)`;
+      s.style.animationDuration = (3 + Math.random() * 6) + 's';
+      s.style.animationDelay = (Math.random() * 5) + 's';
+      neuralBg.appendChild(s);
+    }
+
+    // ===== DATA =====
+    const CATEGORIES = ['politics', 'crypto', 'sports', 'culture', 'tech', 'finance'];
+    const CAT_CLASSES = {
+      politics: 'cat-politics',
+      crypto: 'cat-crypto',
+      sports: 'cat-sports',
+      culture: 'cat-culture',
+      tech: 'cat-tech',
+      finance: 'cat-finance',
+    };
+
+    const MARKETS = [
+      { q: "Will Trump win the 2028 Republican primary?", cat: "politics", baseYes: 62 },
+      { q: "Will Bitcoin hit $100K before July 2026?", cat: "crypto", baseYes: 38 },
+      { q: "Will ETH reach $3,000 by end of Q2?", cat: "crypto", baseYes: 22 },
+      { q: "Will the Fed cut rates in June 2026?", cat: "finance", baseYes: 55 },
+      { q: "Will Apple release AR glasses in 2026?", cat: "tech", baseYes: 35 },
+      { q: "Will SOL flip ETH in market cap?", cat: "crypto", baseYes: 8 },
+      { q: "Will Elon Musk step down from DOGE?", cat: "politics", baseYes: 28 },
+      { q: "Will Lakers win the 2026 NBA Finals?", cat: "sports", baseYes: 12 },
+      { q: "Will GPT-5 be released by summer 2026?", cat: "tech", baseYes: 45 },
+      { q: "Will TikTok be banned in the US?", cat: "culture", baseYes: 18 },
+      { q: "Will the S&P 500 hit 6,500 by June?", cat: "finance", baseYes: 42 },
+      { q: "Will Solana average 10K TPS in Q2?", cat: "crypto", baseYes: 52 },
+      { q: "Will there be a US recession in 2026?", cat: "finance", baseYes: 30 },
+      { q: "Will SpaceX land Starship on Mars?", cat: "tech", baseYes: 5 },
+      { q: "Will DeSantis run for president in 2028?", cat: "politics", baseYes: 48 },
+      { q: "Will BNB hit $1,000 before 2027?", cat: "crypto", baseYes: 25 },
+      { q: "Chiefs win Super Bowl LXI?", cat: "sports", baseYes: 15 },
+      { q: "Will OpenAI IPO in 2026?", cat: "tech", baseYes: 55 },
+    ];
+
+    const AI_THOUGHTS = [
+      { text: 'Scanning <span class="highlight">political markets</span>... Trump primary odds seem <span class="yellow">overpriced</span> given current polling data.', delay: 0 },
+      { text: 'BTC at $86.8K — <span class="highlight">$100K target</span> by July needs <span class="green">+15.2%</span>. Historical Q2 performance suggests <span class="yellow">45% probability</span>, market says 38%.', delay: 3000 },
+      { text: 'Edge detected: <span class="green">ETH $3K market mispriced</span>. Current momentum + potential Pectra upgrade catalyst = 30% fair value vs 22% market price.', delay: 6000 },
+      { text: 'Fed funds futures imply <span class="highlight">68% cut probability</span> for June. Polymarket at 55% — <span class="green">potential 13% edge</span>.', delay: 9000 },
+      { text: 'SOL/ETH flip: market says 8%. Network metrics growing but <span class="red">market cap gap too wide</span>. Fair value: 5%. No edge — <span class="red">skip</span>.', delay: 12000 },
+      { text: 'Sentiment analysis: <span class="highlight">crypto markets</span> lean <span class="green">bullish</span> (62/100). Political markets <span class="yellow">uncertain</span>. Sports: <span class="highlight">neutral</span>.', delay: 15000 },
+      { text: 'Portfolio recommendation: <span class="green">YES</span> on Fed rate cut, <span class="green">YES</span> on BTC $100K, <span class="red">NO</span> on SOL/ETH flip. Expected edge: <span class="green">+8.4%</span>.', delay: 18000 },
+    ];
+
+    let totalMarkets = 0;
+    let edgeDetected = 0;
+    let totalVolume = 0;
+
+    function generateMarket() {
+      const m = MARKETS[Math.floor(Math.random() * MARKETS.length)];
+      const yesOdds = Math.max(1, Math.min(99, m.baseYes + (Math.random() * 16 - 8)));
+      const noOdds = 100 - yesOdds;
+      const volume = Math.floor(50000 + Math.random() * 2000000);
+      const aiConf = Math.floor(40 + Math.random() * 55);
+      const aiFairValue = yesOdds + (Math.random() * 20 - 10);
+      const edge = Math.abs(aiFairValue - yesOdds);
+      const hasEdge = edge > 5;
+
+      return {
+        question: m.q,
+        category: m.cat,
+        yesOdds: Math.round(yesOdds),
+        noOdds: Math.round(noOdds),
+        volume,
+        aiConfidence: aiConf,
+        aiFairValue: Math.round(Math.max(1, Math.min(99, aiFairValue))),
+        edge: edge.toFixed(1),
+        hasEdge,
+        direction: aiFairValue > yesOdds ? 'YES' : 'NO',
+        time: new Date(),
+      };
+    }
+
+    function addMarketToFeed(market) {
+      const feed = document.getElementById('markets-feed');
+      const card = document.createElement('div');
+      card.className = `market-card ${market.hasEdge ? 'edge' : market.aiConfidence > 70 ? 'hot' : ''}`;
+
+      const probColor = market.yesOdds > 60 ? 'var(--green)' : market.yesOdds > 40 ? 'var(--yellow)' : 'var(--red)';
+
+      card.innerHTML = `
+        <div class="market-top">
+          <div class="market-question">${market.question}</div>
+          <span class="market-category ${CAT_CLASSES[market.category]}">${market.category}</span>
+        </div>
+        <div class="market-bottom">
+          <div class="market-stat">
+            <div class="market-stat-label">Market Odds</div>
+            <div class="market-stat-val" style="color:${probColor}">${market.yesOdds}% YES</div>
+          </div>
+          <div class="market-stat">
+            <div class="market-stat-label">AI Fair Value</div>
+            <div class="market-stat-val" style="color:var(--purple)">${market.aiFairValue}%</div>
+          </div>
+          <div class="market-stat">
+            <div class="market-stat-label">${market.hasEdge ? 'EDGE' : 'Edge'}</div>
+            <div class="market-stat-val" style="color:${market.hasEdge ? 'var(--green)' : 'var(--dim)'}">${market.hasEdge ? '+' : ''}${market.edge}%${market.hasEdge ? ' ' + market.direction : ''}</div>
+          </div>
+        </div>
+        <div class="prob-bar">
+          <div class="prob-fill" style="width:${market.yesOdds}%; background: linear-gradient(90deg, var(--green), ${probColor});"></div>
+        </div>
+        <div class="prob-labels">
+          <span>YES ${market.yesOdds}%</span>
+          <span>$${(market.volume / 1000).toFixed(0)}K vol</span>
+          <span>NO ${market.noOdds}%</span>
+        </div>
+      `;
+
+      feed.insertBefore(card, feed.firstChild);
+      totalMarkets++;
+      totalVolume += market.volume;
+      if (market.hasEdge) edgeDetected++;
+
+      document.getElementById('markets-count').textContent = totalMarkets;
+      document.getElementById('edge-count').textContent = edgeDetected;
+      document.getElementById('total-vol').textContent = '$' + (totalVolume / 1000000).toFixed(1) + 'M';
+      document.getElementById('market-sub').textContent = totalMarkets + ' analyzed';
+
+      // Update avg confidence
+      document.getElementById('avg-conf').textContent = market.aiConfidence + '%';
+
+      // Add to edge list if has edge
+      if (market.hasEdge) {
+        addEdge(market);
+      }
+
+      while (feed.children.length > 25) {
+        feed.removeChild(feed.lastChild);
+      }
+    }
+
+    function addEdge(market) {
+      const list = document.getElementById('edge-list');
+      const row = document.createElement('div');
+      row.className = 'edge-row';
+      row.innerHTML = `
+        <div class="edge-market">${market.question}</div>
+        <div class="edge-val">+${market.edge}% ${market.direction}</div>
+      `;
+      list.insertBefore(row, list.firstChild);
+      while (list.children.length > 8) {
+        list.removeChild(list.lastChild);
+      }
+    }
+
+    function updateSentiment() {
+      const score = 35 + Math.random() * 40;
+      const pctLeft = score;
+      document.getElementById('gauge-ptr').style.left = pctLeft + '%';
+
+      let label, color;
+      if (score < 35) { label = 'BEARISH'; color = 'var(--red)'; }
+      else if (score < 55) { label = 'NEUTRAL'; color = 'var(--yellow)'; }
+      else if (score < 70) { label = 'BULLISH'; color = 'var(--green)'; }
+      else { label = 'VERY BULLISH'; color = 'var(--green)'; }
+
+      document.getElementById('sentiment').textContent = label;
+      document.getElementById('sentiment').style.color = color;
+      document.getElementById('sent-sub').textContent = Math.round(score) + '/100';
+    }
+
+    // AI thinking output
+    function startAIThoughts() {
+      const output = document.getElementById('ai-output');
+      let idx = 0;
+
+      function showNext() {
+        if (idx >= AI_THOUGHTS.length) idx = 0;
+        const thought = AI_THOUGHTS[idx];
+        const div = document.createElement('div');
+        div.className = 'ai-thinking';
+        div.innerHTML = thought.text;
+        div.style.animation = 'cardIn 0.5s ease';
+
+        output.insertBefore(div, output.firstChild);
+        while (output.children.length > 6) {
+          output.removeChild(output.lastChild);
+        }
+
+        idx++;
+        setTimeout(showNext, 4000 + Math.random() * 3000);
+      }
+
+      setTimeout(showNext, 2000);
+    }
+
+    // ===== ENGINE =====
+    function startScanner() {
+      // Initial burst
+      for (let i = 0; i < 5; i++) {
+        setTimeout(() => addMarketToFeed(generateMarket()), i * 500);
+      }
+
+      updateSentiment();
+      startAIThoughts();
+
+      function next() {
+        const delay = 4000 + Math.random() * 5000;
+        setTimeout(() => {
+          addMarketToFeed(generateMarket());
+          if (Math.random() > 0.7) updateSentiment();
+          next();
+        }, delay);
+      }
+      next();
+    }
+
+    startScanner();
+  </script>
+</body>
+</html>

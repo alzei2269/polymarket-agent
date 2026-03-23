@@ -1,0 +1,91 @@
+<svg width="1200" height="630" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#7733ff;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#3366ff;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#020208;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#06061a;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+
+  <rect width="1200" height="630" fill="url(#bg)"/>
+
+  <ellipse cx="350" cy="280" rx="400" ry="300" fill="#7733ff" opacity="0.04"/>
+  <ellipse cx="850" cy="380" rx="350" ry="250" fill="#3366ff" opacity="0.03"/>
+
+  <rect x="0" y="0" width="1200" height="4" fill="url(#grad)"/>
+
+  <!-- AI badge -->
+  <g transform="translate(100, 90)">
+    <rect x="0" y="0" width="140" height="32" rx="16" fill="rgba(119,51,255,0.15)" stroke="rgba(119,51,255,0.4)" stroke-width="1"/>
+    <circle cx="20" cy="16" r="5" fill="#7733ff"/>
+    <text x="35" y="21" font-family="monospace" font-size="11" fill="#7733ff" font-weight="800">AI SCANNING</text>
+  </g>
+
+  <!-- Title -->
+  <text x="100" y="205" font-family="system-ui, -apple-system, sans-serif" font-size="72" font-weight="900" fill="#e4e4ef" letter-spacing="-2">
+    polyagent
+  </text>
+
+  <text x="100" y="260" font-family="system-ui, -apple-system, sans-serif" font-size="26" fill="#8888aa" font-weight="500">
+    AI-Powered Prediction Market Intelligence
+  </text>
+
+  <!-- Market cards -->
+  <g transform="translate(100, 300)">
+    <!-- Card 1 -->
+    <rect x="0" y="0" width="500" height="70" rx="12" fill="#06061a" stroke="rgba(0,255,136,0.2)" stroke-width="1"/>
+    <rect x="0" y="0" width="3" height="70" rx="1.5" fill="#00ff88"/>
+    <text x="18" y="25" font-family="system-ui" font-size="13" fill="#e4e4ef" font-weight="700">Will Bitcoin hit $100K before July?</text>
+    <rect x="380" y="8" width="60" height="20" rx="5" fill="rgba(0,204,255,0.1)" stroke="rgba(0,204,255,0.2)" stroke-width="1"/>
+    <text x="410" y="22" font-family="monospace" font-size="9" fill="#00ccff" text-anchor="middle" font-weight="700">CRYPTO</text>
+    <text x="18" y="50" font-family="monospace" font-size="11" fill="#5555aa">Market: 38% YES</text>
+    <text x="170" y="50" font-family="monospace" font-size="11" fill="#7733ff">AI: 45%</text>
+    <text x="440" y="50" font-family="monospace" font-size="16" fill="#00ff88" font-weight="900" text-anchor="end">+7% EDGE</text>
+  </g>
+
+  <g transform="translate(100, 378)">
+    <rect x="0" y="0" width="500" height="70" rx="12" fill="#06061a" stroke="rgba(255,204,0,0.15)" stroke-width="1"/>
+    <text x="18" y="25" font-family="system-ui" font-size="13" fill="#e4e4ef" font-weight="700">Will the Fed cut rates in June 2026?</text>
+    <rect x="380" y="8" width="70" height="20" rx="5" fill="rgba(255,204,0,0.1)" stroke="rgba(255,204,0,0.2)" stroke-width="1"/>
+    <text x="415" y="22" font-family="monospace" font-size="9" fill="#ffcc00" text-anchor="middle" font-weight="700">FINANCE</text>
+    <text x="18" y="50" font-family="monospace" font-size="11" fill="#5555aa">Market: 55% YES</text>
+    <text x="170" y="50" font-family="monospace" font-size="11" fill="#7733ff">AI: 68%</text>
+    <text x="440" y="50" font-family="monospace" font-size="16" fill="#00ff88" font-weight="900" text-anchor="end">+13% EDGE</text>
+  </g>
+
+  <g transform="translate(100, 456)">
+    <rect x="0" y="0" width="500" height="70" rx="12" fill="#06061a" stroke="rgba(255,51,170,0.15)" stroke-width="1"/>
+    <text x="18" y="25" font-family="system-ui" font-size="13" fill="#e4e4ef" font-weight="700">Will Trump win the 2028 primary?</text>
+    <rect x="380" y="8" width="74" height="20" rx="5" fill="rgba(255,51,170,0.1)" stroke="rgba(255,51,170,0.2)" stroke-width="1"/>
+    <text x="417" y="22" font-family="monospace" font-size="9" fill="#ff33aa" text-anchor="middle" font-weight="700">POLITICS</text>
+    <text x="18" y="50" font-family="monospace" font-size="11" fill="#5555aa">Market: 62% YES</text>
+    <text x="170" y="50" font-family="monospace" font-size="11" fill="#7733ff">AI: 58%</text>
+    <text x="440" y="50" font-family="monospace" font-size="16" fill="#ffcc00" font-weight="900" text-anchor="end">4% NO</text>
+  </g>
+
+  <!-- Stats -->
+  <g transform="translate(700, 300)">
+    <rect x="0" y="0" width="400" height="226" rx="14" fill="#06061a" stroke="#12123a" stroke-width="1"/>
+    <text x="24" y="35" font-family="monospace" font-size="11" fill="#5555aa" font-weight="700" letter-spacing="1.5">AI ANALYSIS</text>
+
+    <text x="24" y="70" font-family="monospace" font-size="12" fill="#7733ff">Scanning political markets...</text>
+    <text x="24" y="100" font-family="monospace" font-size="12" fill="#5555aa">BTC $100K needs +15.2%.</text>
+    <text x="24" y="118" font-family="monospace" font-size="12" fill="#00ff88" font-weight="700">Edge: 45% fair vs 38% market</text>
+
+    <text x="24" y="150" font-family="monospace" font-size="12" fill="#5555aa">Fed cut: futures imply 68%</text>
+    <text x="24" y="168" font-family="monospace" font-size="12" fill="#00ff88" font-weight="700">Edge: +13% on YES position</text>
+
+    <text x="24" y="200" font-family="monospace" font-size="12" fill="#ffcc00" font-weight="700">3 actionable edges found</text>
+    <text x="24" y="216" font-family="monospace" font-size="10" fill="#5555aa">Expected portfolio edge: +8.4%</text>
+  </g>
+
+  <text x="100" y="580" font-family="system-ui" font-size="15" fill="#5555aa">
+    Free &amp; open source — AI finds mispriced prediction markets
+  </text>
+  <text x="1100" y="590" font-family="monospace" font-size="16" fill="#5555aa" text-anchor="end" font-weight="600">visioneth</text>
+
+  <rect x="0" y="626" width="1200" height="4" fill="url(#grad)"/>
+</svg>
